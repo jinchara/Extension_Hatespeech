@@ -1,0 +1,28 @@
+<!-- download.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Download Content</title>
+</head>
+<body>
+  <button id="downloadButton">Download Content</button>
+  <script>
+    // Function to download the stored content as a text file
+    document.getElementById('downloadButton').addEventListener('click', () => {
+      chrome.runtime.sendMessage({ action: "getStoredContent" }, (response) => {
+        if (response && response.length > 0) {
+          const content = response.join('\n');
+          const blob = new Blob([content], { type: 'text/plain' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'content.txt';
+          a.click();
+          URL.revokeObjectURL(url);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
